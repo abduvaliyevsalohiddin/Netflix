@@ -7,3 +7,10 @@ class AktyorSerializer(serializers.Serializer):
     davlat = serializers.CharField()
     jins = serializers.CharField()
     tugulgan_yil = serializers.DateField()
+
+
+class TarifSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    nom = serializers.CharField()
+    narx = serializers.IntegerField()
+    davomiylik = serializers.DurationField()

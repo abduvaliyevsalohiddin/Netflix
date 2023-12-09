@@ -9,4 +9,6 @@ urlpatterns = [
     path('aktyorlar/', AktyorlarAPi.as_view()),
     path('aktyor/<int:pk>/', AktyorAPi.as_view()),
 
+    path('tariflar/', TariflarAPi.as_view()),
+
 ]

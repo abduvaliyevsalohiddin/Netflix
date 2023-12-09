@@ -62,3 +62,10 @@ class AktyorAPi(APIView):
             )
             return Response(serializer.data)
         return Response(serializer.errors)
+
+
+class TariflarAPi(APIView):
+    def get(self, request):
+        tariflar = Tarif.objects.all()
+        serializer = TarifSerializer(tariflar, many=True)
+        return Response(serializer.data)
