@@ -69,3 +69,16 @@ class TariflarAPi(APIView):
         tariflar = Tarif.objects.all()
         serializer = TarifSerializer(tariflar, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        tarif = request.data
+        serializer = TarifSerializer(data=tarif)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            Tarif.objects.create(
+                nom=data.get("nom"),
+                narx=data.get("narx"),
+                davomiylik=data.get("davomiylik"),
+            )
+            return Response(serializer.data)
+        return Response(serializer.errors)
