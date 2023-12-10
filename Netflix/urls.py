@@ -10,5 +10,6 @@ urlpatterns = [
     path('aktyor/<int:pk>/', AktyorAPi.as_view()),
 
     path('tariflar/', TariflarAPi.as_view()),
+    path('tarif/<int:pk>/', TarifAPi.as_view()),
 
 ]

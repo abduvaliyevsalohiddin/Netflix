@@ -82,3 +82,34 @@ class TariflarAPi(APIView):
             )
             return Response(serializer.data)
         return Response(serializer.errors)
+
+
+class TarifAPi(APIView):
+    def get(self, request, pk):
+        tarif = Tarif.objects.get(id=pk)
+        serializer = TarifSerializer(tarif)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        Tarif.objects.filter(id=pk).delete()
+        natija = {
+            "xabar": "Tanlangan tarif o'chirildi",
+        }
+        return Response(natija)
+
+    def put(self, request, pk):
+        tarif = Tarif.objects.get(id=pk)
+        serializer = TarifSerializer(tarif, data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            Tarif.objects.filter(id=pk).update(
+                nom=data.get('nom'),
+                narx=data.get('narx'),
+                davomiylik=data.get('davomiylik')
+            )
+            natija = {
+                "xabar": "Tanlangan tarif update bo'ldi",
+            }
+            return Response(
+                natija)  # Bu yerda <serializer.data> buni qoysam eski natijani qaytarb qo'yyapti  shu sababli btta natija qaytaryapman
+        return Response(serializer.errors)
