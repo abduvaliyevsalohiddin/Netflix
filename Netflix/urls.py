@@ -12,4 +12,7 @@ urlpatterns = [
     path('tariflar/', TariflarAPi.as_view()),
     path('tarif/<int:pk>/', TarifAPi.as_view()),
 
+    path('kinolar/', KinolarAPi.as_view()),
+    path('kino/<int:pk>/', KinoAPi.as_view()),
+
 ]

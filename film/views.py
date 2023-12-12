@@ -110,6 +110,28 @@ class TarifAPi(APIView):
             natija = {
                 "xabar": "Tanlangan tarif update bo'ldi",
             }
-            return Response(
-                natija)  # Bu yerda <serializer.data> buni qoysam eski natijani qaytarb qo'yyapti  shu sababli btta natija qaytaryapman
+            return Response(natija)
+            # Bu yerda <serializer.data> buni qoysam eski natijani qaytarb qo'yyapti  shu sababli btta natija qaytaryapman
         return Response(serializer.errors)
+
+
+class KinolarAPi(APIView):
+    def get(self, request):
+        kinolar = Kino.objects.all()
+        serializer = KinoSerializer(kinolar, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        kino = request.data
+        serializer = KinoPostSerializer(data=kino)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+
+class KinoAPi(APIView):
+    def get(self, request, pk):
+        kino = Kino.objects.get(id=pk)
+        serializer = KinoSerializer(kino)
+        return Response(serializer.data)
