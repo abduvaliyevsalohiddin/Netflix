@@ -1,6 +1,8 @@
+from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.pagination import PageNumberPagination
 from .models import *
 from .serializers import *
 
@@ -25,7 +27,20 @@ class HelleApi(APIView):
 class AktyorlarAPi(APIView):
     def get(self, request):
         aktyorlar = Aktyor.objects.all()
-        serializer = AktyorSerializer(aktyorlar, many=True)
+        soz = request.query_params.get("ism")
+        davlati = request.query_params.get("davlat")
+        tartib = request.query_params.get("order")
+        pagination_class = PageNumberPagination
+        pagination_class.page_size = 3
+        paginator = PageNumberPagination()
+        if soz:
+            aktyorlar = aktyorlar.filter(ism__contains=soz)
+        if davlati:
+            aktyorlar = aktyorlar.filter(davlat=davlati)
+        if tartib:
+            aktyorlar = aktyorlar.order_by(tartib)
+        paginated_queryset = paginator.paginate_queryset(aktyorlar, request)
+        serializer = AktyorSerializer(paginated_queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -135,3 +150,67 @@ class KinoAPi(APIView):
         kino = Kino.objects.get(id=pk)
         serializer = KinoSerializer(kino)
         return Response(serializer.data)
+
+
+class IzohModelViewSet(ModelViewSet):
+    queryset = Izoh.objects.all()
+    serializer_class = IzohSerializer
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+    #     return serializer
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     izoh = self.get_object()
+    #     if izoh < 5:
+    #         return Response
+    #     return Response
+
+    # def destroy(self, request, *args, **kwargs):
+    #     pass
+
+
+class KinoModelViewSet(ModelViewSet):
+    queryset = Kino.objects.all()
+    serializer_class = KinoPostSerializer
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 1
+
+    # def list(self, request, *args, **kwargs):  # hammasini get qilish uchun
+    #     kinolar = self.queryset
+    #     serializer = KinoSerializer(kinolar, many=True)
+    #     return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):  # bttasini get qilish uchun
+        kino = self.get_object()
+        serializer = KinoSerializer(kino)
+        return Response(serializer.data)
+
+    @action(detail=True)  # movies/pk/izohlar
+    def izohlar(self, request, pk):
+        kino = self.get_object()
+        kino_izohlar = kino.izoh_set.all()
+        serializer = IzohSerializer(kino_izohlar, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True)  # movies/pk/aktyorlar
+    def aktyorlar(self, request, pk):
+        kino = self.get_object()
+        kino_aktyor = kino.aktyorlar.all()
+        serializer = AktyorSerializer(kino_aktyor, many=True)
+        return Response(serializer.data)
+
+
+class AktyorModelViewSet(ModelViewSet):
+    queryset = Aktyor.objects.all()
+    serializer_class = AktyorSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['id', 'ism', 'davlat']  # /?search=.....
+    ordering_fields = ['id', 'ism', "tugulgan_yil"]  # /?ordering=....
+
+    def get_queryset(self):
+        aktyorlar = self.queryset
+        gender = self.request.query_params.get('jins')
+        if gender:
+            aktyorlar = aktyorlar.filter(jins=gender)
+        return aktyorlar

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.viewsets import ModelViewSet
 
 from .models import *
 
@@ -54,4 +55,10 @@ class KinoSerializer(serializers.ModelSerializer):
 class KinoPostSerializer(serializers.ModelSerializer):
     class Meta():
         model = Kino
+        fields = '__all__'
+
+
+class IzohSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Izoh
         fields = '__all__'

@@ -1,7 +1,13 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 from film.views import *
+
+router = DefaultRouter()
+router.register("izohlar", IzohModelViewSet)
+router.register("movies", KinoModelViewSet)
+router.register("actor", AktyorModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,4 +21,5 @@ urlpatterns = [
     path('kinolar/', KinolarAPi.as_view()),
     path('kino/<int:pk>/', KinoAPi.as_view()),
 
+    path("", include(router.urls))
 ]
