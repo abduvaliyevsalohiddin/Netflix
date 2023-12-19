@@ -157,6 +157,8 @@ class IzohModelViewSet(ModelViewSet):
     serializer_class = IzohSerializer
     filter_backends = [OrderingFilter]
     ordering_fields = ["sana"]
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 5
 
     # def perform_create(self, serializer):
     #     serializer.save(user=self.request.user)
