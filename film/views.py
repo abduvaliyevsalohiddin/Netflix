@@ -155,6 +155,8 @@ class KinoAPi(APIView):
 class IzohModelViewSet(ModelViewSet):
     queryset = Izoh.objects.all()
     serializer_class = IzohSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ["sana"]
 
     # def perform_create(self, serializer):
     #     serializer.save(user=self.request.user)
