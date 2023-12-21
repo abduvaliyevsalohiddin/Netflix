@@ -67,4 +67,4 @@ class IzohSerializer(serializers.ModelSerializer):
 class IzohSerializer2(serializers.ModelSerializer):
     class Meta:
         model = Izoh
-        fields = ('id', 'matn', 'sana', 'kino', 'baho', "user")
+        fields = ('id', 'matn', 'sana', 'kino', 'baho')

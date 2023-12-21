@@ -7,6 +7,7 @@ from rest_framework.generics import *
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.status import HTTP_201_CREATED
 from .models import *
 from .serializers import *
 
@@ -233,3 +234,6 @@ class IzohListCreateAPIView(ListCreateAPIView):
         queryset = Izoh.objects.all()
         return queryset.filter(user=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        return HTTP_201_CREATED
