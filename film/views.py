@@ -3,6 +3,10 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import *
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from .models import *
 from .serializers import *
 
@@ -218,3 +222,14 @@ class AktyorModelViewSet(ModelViewSet):
         if gender:
             aktyorlar = aktyorlar.filter(jins=gender)
         return aktyorlar
+
+
+class IzohListCreateAPIView(ListCreateAPIView):
+    serializer_class = IzohSerializer2
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get_queryset(self):
+        queryset = Izoh.objects.all()
+        return queryset.filter(user=self.request.user)
+

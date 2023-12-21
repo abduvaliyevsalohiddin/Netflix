@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
 
 from film.views import *
 
@@ -21,5 +22,8 @@ urlpatterns = [
     path('kinolar/', KinolarAPi.as_view()),
     path('kino/<int:pk>/', KinoAPi.as_view()),
 
-    path("", include(router.urls))
+    path("", include(router.urls)),
+
+    path('comment/', IzohListCreateAPIView.as_view()),
+    path('token/', obtain_auth_token)
 ]
