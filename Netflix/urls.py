@@ -25,5 +25,7 @@ urlpatterns = [
     path("", include(router.urls)),
 
     path('comment/', IzohListCreateAPIView.as_view()),
-    path('token/', obtain_auth_token)
+    path('token/', obtain_auth_token),
+    path('comment/<int:pk>/', IzohDestroyAPIView.as_view()),
+
 ]

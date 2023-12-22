@@ -3,11 +3,13 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+
 from rest_framework.generics import *
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import *
+
 from .models import *
 from .serializers import *
 
@@ -237,3 +239,16 @@ class IzohListCreateAPIView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         return HTTP_201_CREATED
+
+
+class IzohDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = IzohSerializer2
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get_object(self):
+        obj = get_object_or_404(Izoh, id=self.kwargs["pk"], user=self.request.user)
+        return obj
+
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
